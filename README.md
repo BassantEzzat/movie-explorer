@@ -1,59 +1,60 @@
-# MovieExplorer
+# Cine — Movie Explorer 🎬
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 21.2.24.
+A movie discovery app where **the whole page takes on the colors of the film you're looking at**. Built with Angular and the TMDB API.
 
-## Development server
+**🔗 Live demo:** https://movie-explorer-six-omega.app
 
-To start a local development server, run:
+## Features
 
-```bash
-ng serve
-```
+- **Adaptive color**: the palette is extracted from each poster and the whole page transitions to it, with a soft blurred backdrop behind the content.
+- **Hero slider** with word-by-word title animation, autoplay with progress, swipe on touch devices and keyboard arrows.
+- **Browse**: debounced search and genre filters; the URL is the source of truth (`/browse?q=batman`, `/browse?genre=28`), with "Load more", skeleton loading and error states.
+- **Movie details**: cast, trailer modal, facts, similar movies, clickable genres.
+- **Watchlist**: saved in `localStorage`, synced across tabs, with sorting, undo toasts and a live counter.
+- **Responsive and accessible**: mobile-first layout, `prefers-reduced-motion` support, keyboard navigation, semantic markup.
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+## Tech
 
-## Code scaffolding
+- Angular (standalone components, signals, zoneless change detection, new control flow)
+- RxJS for data fetching, `toSignal` / `toObservable` interop
+- CSS only: custom properties with `@property` for animated theming, view transitions between routes
+- Vercel (hosting + a serverless proxy that keeps the TMDB token private)
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
-
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+## Getting started
 
 ```bash
-ng build
+git clone https://github.com/BassantEzzat/movie-explorer.git
+cd movie-explorer
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+1. Create a free account at [themoviedb.org](https://www.themoviedb.org/) and copy your **API Read Access Token** (Settings → API).
+2. Create `src/environments/environment.development.ts`:
 
-## Running unit tests
-
-To execute unit tests with the [Vitest](https://vitest.dev/) test runner, use the following command:
-
-```bash
-ng test
+```ts
+export const environment = {
+  tmdbToken: 'YOUR_READ_ACCESS_TOKEN',
+  apiUrl: 'https://api.themoviedb.org/3',
+  imgUrl: 'https://image.tmdb.org/t/p',
+};
 ```
 
-## Running end-to-end tests
+3. Run `ng serve` and open http://localhost:4200
 
-For end-to-end (e2e) testing, run:
+## Deploy
 
-```bash
-ng e2e
+Deployed on Vercel. In production the app calls `/api/tmdb` (a serverless function in `api/tmdb.js`) which adds the token on the server, so it is never exposed to the browser. Set `TMDB_TOKEN` in the Vercel project's Environment Variables.
+
+## Structure
+
+```
+src/app
+├─ core/        services (TMDB, theme, watchlist, toast), models, directives
+├─ layout/      header
+├─ shared/      movie card, rail, ambient background, save button, toast
+└─ features/    home, browse, movie-details, watchlist
 ```
 
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
+## Credits
 
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+Movie data and images by [TMDB](https://www.themoviedb.org/). This product uses the TMDB API but is not endorsed or certified by TMDB.
